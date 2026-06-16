@@ -1,0 +1,103 @@
+[15/06, 17:53] Heitor Amigo Da Escola: }
+
+        quizDiv.innerHTML = `
+            <h2>Fim de Jogo!</h2>
+            <p class="resultado">Você acertou ${pontos} respostas de ${totalPerguntas}.</p>
+            <p class="resultado">Aproveitamento: ${porcentagem}%</p>
+            <p style="margin-top:20px; font-size:16px; line-height:1.5;">${mensagemPersonalizada}</p>
+            <button class="btn-opcao" style="text-align:center; margin-top:20px;" onclick="window.location.reload()">Jogar Novamente</button>
+        `;
+    }
+
+    // Inicializa o jogo ao abrir a página
+    carregarPergunta();
+</script>
+
+</body>
+</html>
+Use o código com cuidado.
+O que este código faz exatamente:
+Visual Limpo: Na tela só aparecem os botões com as opções normais (A, B, C, D) sem nenhuma marcação indicando qual é a certa.
+Avanço Instantâneo: Assim que o usuário clica em qualquer alternativa, a função verificarResposta() roda em background em milissegundos, salva se o ponto foi feito e já redesenha a tela com a próxima pergunta. O botão de "Avançar" não existe.
+Placar Matemático Secreto: O placar final calcula a porcentagem exata ((pontos / 10) * 100) e exibe o texto motivacional com base no desempenho do jogador.
+[15/06, 17:54] Heitor Amigo Da Escola: r: 1
+        },
+        {
+            q: "Qual integrante teve a famosa festa com touro mecânico e pinhata do Mamaco?",
+            o: ["Scoob", "Jumbra", "Ziggy", "Sandega"],
+            r: 2
+        },
+        {
+            q: "Exemplo: Se o criador fizesse uma pergunta sobre o próprio passado, qual seria o formato de um vídeo antigo?",
+            o: ["Vlog de webcam em 2015 com áudio estourado", "Desafio 3h da manhã em 4K", "Short gravado com IA ontem", "React cinematográfico"],
+            r: 0
+        }
+    ];
+
+    let perguntaAtual = 0;
+    let pontos = 0;
+
+    function carregarPergunta() {
+        if (perguntaAtual >= perguntas.length) {
+            mostrarPlacar();
+            return;
+        }
+
+        const dados = perguntas[perguntaAtual];
+        document.getElementById("numero-pergunta").innerText = `Pergunta ${perguntaAtual + 1} de ${perguntas.length}`;
+        document.getElementById("texto-pergunta").innerText = dados.q;
+        
+        const container = document.getElementById("opcoes-container");
+        container.innerHTML = ""; // Limpa os botões anteriores
+
+        // Cria os botões das alternativas limpos, sem spoiler
+        dados.o.forEach((opcao, index) => {
+            const botao = document.createElement("button");
+            botao.className = "btn-opcao";
+            botao.innerText = opcao;
+            // AÇÃO DE CLIQUE: Avança direto assim que o usuário clica
+            botao.onclick = () => verificarResposta(index);
+            container.appendChild(botao);
+        });
+    }
+
+    function verificarResposta(indiceEscolhido) {
+        // Se o índice do botão clicado for igual ao 'r' oculto do banco de dados, pontua
+        if (indiceEscolhido === perguntas[perguntaAtual].r) {
+            pontos++;
+        }
+        // Avança o contador do jogo imediatamente e pula para a próxima tela
+        perguntaAtual++;
+        carregarPergunta();
+    }
+
+    function mostrarPlacar() {
+        const totalPerguntas = perguntas.length;
+        const porcentagem = (pontos / totalPerguntas) * 100;
+        const quizDiv = document.getElementById("quiz");
+        
+        let mensagemPersonalizada = "";
+        if (pontos >= 9) {
+            mensagemPersonalizada = "Você é INSANO! Conhece a Liga Mistério melhor que o próprio Xinglau!";
+        } else if (pontos >= 5) {
+            mensagemPersonalizada = "Muito bom! Você faz parte da Tropa do Pato, mas errou alguns detalhes.";
+        } else {
+            mensagemPersonalizada = "Ih, o Clone do Mal te pegou! Assista mais vídeos da Mansão às 3h da manhã e tente de novo!";
+        }
+
+        quizDiv.innerHTML = `
+            <h2>Fim de Jogo!</h2>
+            <p class="resultado">Você acertou ${pontos} respostas de ${totalPerguntas}.</p>
+            <p class="resultado">Aproveitamento: ${porcentagem}%</p>
+            <p style="margin-top:20px; font-size:16px; line-height:1.5;">${mensagemPersonalizada}</p>
+            <button class="btn-opcao" style="text-align:center; margin-top:20px;" onclick="window.location.reload()">Jogar Novamente</button>
+        `;
+    }
+
+    // Inicializa o jogo ao abrir a página
+    carregarPergunta();
+</script>
+
+</body>
+</html>
+Use o código com cuidado
