@@ -1,27 +1,103 @@
-[15/06, 17:53] Heitor Amigo Da Escola: }
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Liga Mistério</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121214;
+            color: #e1e1e6;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #quiz {
+            background-color: #202024;
+            border-radius: 8px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        h2 {
+            margin-top: 0;
+            color: #8257e5;
+            font-size: 24px;
+        }
+        #numero-pergunta {
+            font-size: 14px;
+            color: #7c7c8a;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        #texto-pergunta {
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        #opcoes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .btn-opcao {
+            background-color: #29292e;
+            border: 2px solid #323238;
+            border-radius: 6px;
+            color: #e1e1e6;
+            padding: 14px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-align: left;
+            width: 100%;
+        }
+        .btn-opcao:hover {
+            background-color: #8257e5;
+            border-color: #8257e5;
+            color: #fff;
+        }
+        .resultado {
+            font-size: 20px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .btn-reiniciar {
+            background-color: #8257e5;
+            border: none;
+            border-radius: 6px;
+            padding: 14px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 25px;
+            font-weight: bold;
+            width: 100%;
+            color: white;
+        }
+        .btn-reiniciar:hover {
+            background-color: #9466ff;
+        }
+    </style>
+</head>
+<body>
 
-        quizDiv.innerHTML = `
-            <h2>Fim de Jogo!</h2>
-            <p class="resultado">Você acertou ${pontos} respostas de ${totalPerguntas}.</p>
-            <p class="resultado">Aproveitamento: ${porcentagem}%</p>
-            <p style="margin-top:20px; font-size:16px; line-height:1.5;">${mensagemPersonalizada}</p>
-            <button class="btn-opcao" style="text-align:center; margin-top:20px;" onclick="window.location.reload()">Jogar Novamente</button>
-        `;
-    }
+<div id="quiz">
+    <div id="numero-pergunta">Carregando...</div>
+    <div id="texto-pergunta">Aguarde um momento.</div>
+    <div id="opcoes-container"></div>
+</div>
 
-    // Inicializa o jogo ao abrir a página
-    carregarPergunta();
-</script>
-
-</body>
-</html>
-Use o código com cuidado.
-O que este código faz exatamente:
-Visual Limpo: Na tela só aparecem os botões com as opções normais (A, B, C, D) sem nenhuma marcação indicando qual é a certa.
-Avanço Instantâneo: Assim que o usuário clica em qualquer alternativa, a função verificarResposta() roda em background em milissegundos, salva se o ponto foi feito e já redesenha a tela com a próxima pergunta. O botão de "Avançar" não existe.
-Placar Matemático Secreto: O placar final calcula a porcentagem exata ((pontos / 10) * 100) e exibe o texto motivacional com base no desempenho do jogador.
-[15/06, 17:54] Heitor Amigo Da Escola: r: 1
-        },
+<script>
+    const perguntas = [
         {
             q: "Qual integrante teve a famosa festa com touro mecânico e pinhata do Mamaco?",
             o: ["Scoob", "Jumbra", "Ziggy", "Sandega"],
@@ -48,38 +124,34 @@ Placar Matemático Secreto: O placar final calcula a porcentagem exata ((pontos 
         document.getElementById("texto-pergunta").innerText = dados.q;
         
         const container = document.getElementById("opcoes-container");
-        container.innerHTML = ""; // Limpa os botões anteriores
+        container.innerHTML = ""; 
 
-        // Cria os botões das alternativas limpos, sem spoiler
         dados.o.forEach((opcao, index) => {
             const botao = document.createElement("button");
             botao.className = "btn-opcao";
             botao.innerText = opcao;
-            // AÇÃO DE CLIQUE: Avança direto assim que o usuário clica
             botao.onclick = () => verificarResposta(index);
             container.appendChild(botao);
         });
     }
 
     function verificarResposta(indiceEscolhido) {
-        // Se o índice do botão clicado for igual ao 'r' oculto do banco de dados, pontua
         if (indiceEscolhido === perguntas[perguntaAtual].r) {
             pontos++;
         }
-        // Avança o contador do jogo imediatamente e pula para a próxima tela
         perguntaAtual++;
         carregarPergunta();
     }
 
     function mostrarPlacar() {
         const totalPerguntas = perguntas.length;
-        const porcentagem = (pontos / totalPerguntas) * 100;
+        const porcentagem = Math.round((pontos / totalPerguntas) * 100);
         const quizDiv = document.getElementById("quiz");
         
         let mensagemPersonalizada = "";
-        if (pontos >= 9) {
+        if (porcentagem >= 90) {
             mensagemPersonalizada = "Você é INSANO! Conhece a Liga Mistério melhor que o próprio Xinglau!";
-        } else if (pontos >= 5) {
+        } else if (porcentagem >= 50) {
             mensagemPersonalizada = "Muito bom! Você faz parte da Tropa do Pato, mas errou alguns detalhes.";
         } else {
             mensagemPersonalizada = "Ih, o Clone do Mal te pegou! Assista mais vídeos da Mansão às 3h da manhã e tente de novo!";
@@ -87,17 +159,15 @@ Placar Matemático Secreto: O placar final calcula a porcentagem exata ((pontos 
 
         quizDiv.innerHTML = `
             <h2>Fim de Jogo!</h2>
-            <p class="resultado">Você acertou ${pontos} respostas de ${totalPerguntas}.</p>
+            <p class="resultado">Você acertou ${pontos} de ${totalPerguntas}.</p>
             <p class="resultado">Aproveitamento: ${porcentagem}%</p>
-            <p style="margin-top:20px; font-size:16px; line-height:1.5;">${mensagemPersonalizada}</p>
-            <button class="btn-opcao" style="text-align:center; margin-top:20px;" onclick="window.location.reload()">Jogar Novamente</button>
+            <p style="margin-top:20px; font-size:16px; line-height:1.5; color:#a8a8b3;">${mensagemPersonalizada}</p>
+            <button class="btn-reiniciar" onclick="window.location.reload()">Jogar Novamente</button>
         `;
     }
 
-    // Inicializa o jogo ao abrir a página
     carregarPergunta();
 </script>
 
 </body>
 </html>
-Use o código com cuidado
